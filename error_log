@@ -1,0 +1,17 @@
+[17-Sep-2018 13:15:24 UTC] PHP Fatal error:  Call to undefined method User_model::getUserIds() in /home/itseain/public_html/family_tree/application/controllers/User.php on line 78
+[17-Sep-2018 17:34:41 UTC] PHP Fatal error:  Call to a member function create_links() on null in /home/itseain/public_html/family_tree/application/views/create_tree.php on line 143
+[17-Sep-2018 17:34:52 UTC] PHP Fatal error:  Call to a member function create_links() on null in /home/itseain/public_html/family_tree/application/views/create_tree.php on line 143
+[17-Sep-2018 17:35:54 UTC] PHP Fatal error:  Call to a member function create_links() on null in /home/itseain/public_html/family_tree/application/views/create_tree.php on line 143
+[20-Sep-2018 11:20:44 UTC] PHP Fatal error:  Call to a member function initialize() on null in /home/itseain/public_html/family_tree/application/controllers/User.php on line 63
+[22-Sep-2018 06:25:58 UTC] PHP Fatal error:  Call to undefined method CI_DB_mysqli_driver::row() in /home/itseain/public_html/family_tree/application/models/User_model.php on line 17
+[22-Sep-2018 06:26:33 UTC] PHP Fatal error:  Call to undefined method stdClass::num_rows() in /home/itseain/public_html/family_tree/application/models/User_model.php on line 17
+[22-Sep-2018 06:26:54 UTC] PHP Fatal error:  Call to a member function num_rows() on array in /home/itseain/public_html/family_tree/application/models/User_model.php on line 17
+[22-Sep-2018 13:22:25 UTC] PHP Fatal error:  Call to undefined function doupload() in /home/itseain/public_html/family_tree/application/controllers/User.php on line 192
+[23-Sep-2018 08:35:39 UTC] PHP Fatal error:  Cannot re-assign auto-global variable _FILES in /home/itseain/public_html/family_tree/application/controllers/User.php on line 138
+[26-Sep-2018 09:12:15 UTC] PHP Fatal error:  Call to a member function num_rows() on array in /home/itseain/public_html/family_tree/application/controllers/User.php on line 90
+[26-Sep-2018 09:12:17 UTC] PHP Fatal error:  Call to a member function num_rows() on array in /home/itseain/public_html/family_tree/application/controllers/User.php on line 90
+[26-Sep-2018 09:12:17 UTC] PHP Fatal error:  Call to a member function num_rows() on array in /home/itseain/public_html/family_tree/application/controllers/User.php on line 90
+[26-Sep-2018 09:12:18 UTC] PHP Fatal error:  Call to a member function num_rows() on array in /home/itseain/public_html/family_tree/application/controllers/User.php on line 90
+[28-Sep-2018 09:57:50 UTC] PHP Fatal error:  Call to undefined function base_url() in /home/itseain/public_html/family_tree/application/controllers/User.php on line 12
+[28-Sep-2018 09:58:00 UTC] PHP Fatal error:  Call to undefined function base_url() in /home/itseain/public_html/family_tree/application/controllers/User.php on line 12
+[28-Sep-2018 09:58:16 UTC] PHP Fatal error:  Call to undefined function base_url() in /home/itseain/public_html/family_tree/application/controllers/User.php on line 12
