@@ -137,6 +137,12 @@ $redirect_key = 'index.php/user/';
 
 
                         <li class="treeview">
+                            <a href="<?php echo base_url() . $redirect_key; ?>dashboard" >
+                                <i class="fa fa-dashboard"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="treeview">
                             <a href="<?php echo base_url() . $redirect_key; ?>viewMap" >
                                 <i class="fa fa-map"></i>
                                 <span>Map</span>
@@ -150,7 +156,7 @@ $redirect_key = 'index.php/user/';
                             </a>
                         </li>
                         <li class="treeview">
-                            <a href="<?php echo base_url() . $redirect_key; ?>dashboard" >
+                            <a href="<?php echo base_url() . $redirect_key; ?>breakdowns" >
                                 <i class="fa fa-thumb-tack"></i>
                                 <span>Break Downs</span>
                             </a>

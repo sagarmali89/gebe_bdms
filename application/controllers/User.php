@@ -154,7 +154,62 @@ class User extends BaseController {
     }
 
     function dashboard() {
-        if (0) {
+        $data['redirect_key'] = $this->redirect_key;
+        
+        $data['total_breakdowns']['On Hold'] = $this->db->query("SELECT COUNT(id) as total_on_hold FROM ims_breakdowns WHERE status='On Hold'")->row()->total_on_hold;
+        $data['total_breakdowns']['On-Going'] = $this->db->query("SELECT COUNT(id) as total_on_going FROM ims_breakdowns WHERE status='On-Going'")->row()->total_on_going;
+        $data['total_breakdowns']['Completed'] = $this->db->query("SELECT COUNT(id) as total_completed FROM ims_breakdowns WHERE status='Completed'")->row()->total_completed;
+        $data['total_breakdowns']['Reported'] = $this->db->query("SELECT COUNT(id) as total_reported FROM ims_breakdowns WHERE status='Reported'")->row()->total_reported;
+       
+        $data['months'] = $months = array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+        $data['status_names'] = array(
+            array(
+                'name'=>'On Hold',
+                'color_code' => '#f39c12'
+                ),
+            array(
+                'name'=>'On-Going',
+                'color_code' => '#00c0ef'
+                ),
+            array(
+                'name'=>'Completed',
+                'color_code' => '#00a65a'
+                ),
+            array(
+                'name'=>'Reported',
+                'color_code' => '#dd4b39'
+                )
+        );
+       // print_r($data['status_names']);
+      //  die();
+      $total_on_hold = 0;
+      $total_on_going = 0;
+      $total_completed = 0;
+      $total_reported = 0;
+       
+        foreach($months as $month){
+        $data['total_breakdowns'][$month]['On Hold'] = $this->db->query("SELECT COUNT(id) as total_on_hold FROM ims_breakdowns WHERE status='On Hold' and  createdDtm BETWEEN '".date('Y-m-01', strtotime(date('Y').'-'.$month.'-'.'01'))."' AND '".date('Y-m-t', strtotime(date('Y').'-'.$month.'-'.'01'))."'")->row()->total_on_hold;
+        $total_on_hold = $total_on_hold + $data['total_breakdowns'][$month]['On Hold'];
+        $data['total_breakdowns'][$month]['On-Going'] = $this->db->query("SELECT COUNT(id) as total_on_going FROM ims_breakdowns WHERE status='On-Going' and createdDtm BETWEEN '".date('Y-m-01', strtotime(date('Y').'-'.$month.'-'.'01'))."' AND '".date('Y-m-t', strtotime(date('Y').'-'.$month.'-'.'01'))."'")->row()->total_on_going;
+        $total_on_going =  $total_on_going + $data['total_breakdowns'][$month]['On-Going'];
+        $data['total_breakdowns'][$month]['Completed'] = $this->db->query("SELECT COUNT(id) as total_completed FROM ims_breakdowns WHERE status='Completed' and createdDtm BETWEEN '".date('Y-m-01', strtotime(date('Y').'-'.$month.'-'.'01'))."' AND '".date('Y-m-t', strtotime(date('Y').'-'.$month.'-'.'01'))."'")->row()->total_completed;
+        $total_completed = $total_completed +  $data['total_breakdowns'][$month]['Completed'];
+        $data['total_breakdowns'][$month]['Reported'] = $this->db->query("SELECT COUNT(id) as total_reported FROM ims_breakdowns WHERE status='Reported' and createdDtm BETWEEN '".date('Y-m-01', strtotime(date('Y').'-'.$month.'-'.'01'))."' AND '".date('Y-m-t', strtotime(date('Y').'-'.$month.'-'.'01'))."'")->row()->total_reported;
+        $total_reported =  $total_reported + $data['total_breakdowns'][$month]['Reported'];
+    }
+    $data['total_reported_breakdowns'] = $total_reported;
+    $data['total_on_going_breakdowns'] = $total_on_going;
+    $data['total_on_hold_breakdowns'] = $total_on_hold;
+    $data['total_completed_breakdowns'] = $total_completed;
+
+        //echo '<pre>';
+       // print_r($data['total_breakdowns']);
+      //  print_r($data['statuses']);
+      ///  die();
+        $this->loadViews("dashboard", $this->global, $data, NULL);
+    }
+        function breakdowns() {
+            if (0) {
             $this->loadThis();
         } else {
             $this->load->model('user_model');
@@ -206,10 +261,10 @@ class User extends BaseController {
             $data['regions'] = $regions;
             $data['street_names'] = $street_names;
 
-            $data['breakdowns'] = $this->user_model->getBreakdowns();
+           // $data['breakdowns'] = $this->user_model->getBreakdowns();
             $this->global['pageTitle'] = 'BDMS :  Add/Upate/Delete Breakdowns';
             $data['redirect_key'] = $this->redirect_key;
-            $this->loadViews("dashboard", $this->global, $data, NULL);
+            $this->loadViews("breakdowns", $this->global, $data, NULL);
         }
     }
 
@@ -1330,6 +1385,73 @@ class User extends BaseController {
         $this->user_model->updateTechnician($typeInfo, $where);
         redirect($this->redirect_key . 'technicians');
     }
+
+
+    public function getBreakdownRecordsForDataTable() {
+        $draw = $_POST['draw'];
+        $row = $_POST['start'];
+        $rowperpage = $_POST['length']; // Rows display per page
+        $columnIndex = $_POST['order'][0]['column']; // Column index
+        $columnName = $_POST['columns'][$columnIndex]['data']; // Column name
+        $columnSortOrder = $_POST['order'][0]['dir']; // asc or desc
+        $searchValue = $_POST['search']['value']; // Search value
+
+
+
+
+        $totalRecords = $this->db->get('ims_breakdowns')->num_rows();
+        if ($totalRecords> 0) {
+         for ($i=0;$i<2;$i++) {
+             $this->db->select('ims_breakdowns.*, ims_street_name.street_name, ims_technicians.name as technician_name, ims_region.region as region_name, ims_reason.reason as reason_name');
+             $this->db->from('ims_breakdowns');
+             $this->db->join('ims_street_name', 'ims_street_name.id = ims_breakdowns.street_id');
+             $this->db->join('ims_technicians', 'ims_technicians.id = ims_breakdowns.technician_id');
+             $this->db->join('ims_region', 'ims_region.id = ims_breakdowns.region_id');
+             $this->db->join('ims_reason', 'ims_reason.id = ims_breakdowns.reason_id');
+             if (trim($searchValue) !='') {
+                 $this->db->like('caller_name', $searchValue);
+                 $this->db->or_like('direction_note', $searchValue);
+                 $this->db->or_like('status', $searchValue);
+                 $this->db->or_like('connection_type', $searchValue);
+                 $this->db->or_like('division', $searchValue);
+                 $this->db->or_like('ims_breakdowns.createdDtm', $searchValue);
+                 $this->db->or_like('ims_street_name.street_name', $searchValue);
+                 $this->db->or_like('ims_region.region', $searchValue);
+                 $this->db->or_like('ims_reason.reason', $searchValue);
+                 $this->db->or_like('ims_technicians.name', $searchValue);
+             }
+             if($i==0){
+                $this->db->order_by($columnName, $columnSortOrder);
+                $data = $this->db->get()->result_array();
+                $totalRecordwithFilter = count($data);
+             }else{
+                 $this->db->limit($rowperpage, $row);
+                 $this->db->order_by($columnName, $columnSortOrder);
+                 $data = $this->db->get()->result_array();
+                 
+             }
+             
+         }
+        
+        } else {
+            $totalRecords = 0;
+            $totalRecordwithFilter = 0;
+            $draw = 0;
+            $data = NULL;
+        }
+
+
+
+        $response = array(
+            "draw" => intval($draw),
+            "iTotalRecords" =>$totalRecords,
+            "iTotalDisplayRecords" =>  $totalRecordwithFilter,
+            "aaData" => $data
+        );
+        echo json_encode($response);
+    }
+
+
 
     /* form submit end */
 }
